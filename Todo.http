@@ -122,3 +122,16 @@ Content-Type: application/json
 }
 
 ###
+
+### Delete todo by valid ID
+DELETE http://localhost:3000/todos/7
+
+###
+
+### Delete todo with invalid ID (string)
+DELETE http://localhost:3000/todos/abc
+
+###
+
+### Delete todo that doesn't exist
+DELETE http://localhost:3000/todos/9999
