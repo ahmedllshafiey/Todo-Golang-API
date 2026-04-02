@@ -19,13 +19,12 @@ func CreateUser(pool *pgxpool.Pool, user models.User) (*models.User, error) {
 	var query string = `
 		INSERT INTO users (email, password)
 		VALUES ($1, $2)
-		RETURNING id, email, crated_at, updated_at
+		RETURNING id, email, created_at, updated_at
 	`
 
 	err := pool.QueryRow(ctx, query, user.Email, user.Password).Scan(
 		&user.ID,
 		&user.Email,
-		&user.Password,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)

@@ -168,7 +168,7 @@ func DeleteToDo(pool *pgxpool.Pool, id int) error {
 	}
 
 	if commandTag.RowsAffected() == 0 {
-		return fmt.Errorf("Todo with id %d not found, id")
+		return fmt.Errorf("Todo with id %d not found", id)
 	}
 
 	return nil

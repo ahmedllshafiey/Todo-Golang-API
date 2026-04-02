@@ -3,6 +3,58 @@ GET http://localhost:3000/
 
 ###
 
+### Register user (valid)
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "test4@example.com",
+  "password": "123456"
+}
+
+###
+
+### Register user with short password (should fail)
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "test2@example.com",
+  "password": "123"
+}
+
+###
+
+### Register user with missing email (should fail)
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "password": "123456"
+}
+
+###
+
+### Register user with duplicate email (should fail)
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "123456"
+}
+
+###
+
+### Register user with invalid JSON (should fail)
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "broken@example.com",
+
+###
+
 ### Get all todos (empty or list)
 GET http://localhost:3000/todos
 
