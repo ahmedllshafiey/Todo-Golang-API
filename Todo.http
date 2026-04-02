@@ -1,3 +1,13 @@
+### Health check
+GET http://localhost:3000/
+
+###
+
+### Get all todos
+GET http://localhost:3000/todos
+
+###
+
 ### Create a new todo (valid)
 POST http://localhost:3000/todos
 Content-Type: application/json
@@ -35,3 +45,24 @@ Content-Type: application/json
 
 {
   "title": "Broken JSON",
+
+###
+
+### Get todo by ID (replace 1)
+GET http://localhost:3000/todos/1
+
+###
+
+### Update todo (replace 1)
+PUT http://localhost:3000/todos/1
+Content-Type: application/json
+
+{
+  "title": "Updated Todo",
+  "completed": true
+}
+
+###
+
+### Delete todo (replace 1)
+DELETE http://localhost:3000/todos/1
