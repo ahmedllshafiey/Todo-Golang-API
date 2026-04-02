@@ -47,5 +47,7 @@ func main() {
 
 	router.GET("/todos/:id", handlers.GetTodoByIDHandler(pool))
 
+	router.PUT("/todos/:id", handlers.UpdateTodoByIDHandler(pool))
+
 	router.Run(":" + cfg.Port)
 }
