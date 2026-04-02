@@ -4,6 +4,7 @@ import (
 	"log"
 	"todo-api/internal/config"
 	"todo-api/internal/database"
+	"todo-api/internal/handlers"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -39,6 +40,8 @@ func main() {
 			"database": "connected",
 		})
 	})
+
+	router.POST("/todos", handlers.CreateTodoHandler(pool))
 
 	router.Run(":" + cfg.Port)
 }
