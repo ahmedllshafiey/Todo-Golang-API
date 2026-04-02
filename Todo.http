@@ -3,7 +3,7 @@ GET http://localhost:3000/
 
 ###
 
-### Get all todos
+### Get all todos (empty or list)
 GET http://localhost:3000/todos
 
 ###
@@ -19,7 +19,7 @@ Content-Type: application/json
 
 ###
 
-### Create todo without completed (should default if handled)
+### Create todo without completed (defaults to false)
 POST http://localhost:3000/todos
 Content-Type: application/json
 
@@ -29,7 +29,7 @@ Content-Type: application/json
 
 ###
 
-### Create todo with missing title (should fail validation)
+### Create todo with missing title (should fail)
 POST http://localhost:3000/todos
 Content-Type: application/json
 
@@ -39,7 +39,7 @@ Content-Type: application/json
 
 ###
 
-### Create todo with invalid JSON
+### Create todo with invalid JSON (should fail)
 POST http://localhost:3000/todos
 Content-Type: application/json
 
@@ -48,21 +48,77 @@ Content-Type: application/json
 
 ###
 
-### Get todo by ID (replace 1)
+### Get todo by valid ID
 GET http://localhost:3000/todos/1
 
 ###
 
-### Update todo (replace 1)
+### Get todo with invalid ID (string)
+GET http://localhost:3000/todos/abc
+
+###
+
+### Get todo that doesn't exist
+GET http://localhost:3000/todos/9999
+
+###
+
+### Update ONLY title (Completed = nil)
 PUT http://localhost:3000/todos/1
 Content-Type: application/json
 
 {
-  "title": "Updated Todo",
+  "title": "Updated Title Only"
+}
+
+###
+
+### Update ONLY completed (Title = nil)
+PUT http://localhost:3000/todos/1
+Content-Type: application/json
+
+{
   "completed": true
 }
 
 ###
 
-### Delete todo (replace 1)
-DELETE http://localhost:3000/todos/1
+### Update BOTH fields
+PUT http://localhost:3000/todos/1
+Content-Type: application/json
+
+{
+  "title": "Fully Updated",
+  "completed": true
+}
+
+###
+
+### Update with empty body (should fail)
+PUT http://localhost:3000/todos/1
+Content-Type: application/json
+
+{
+}
+
+###
+
+### Update with invalid ID
+PUT http://localhost:3000/todos/abc
+Content-Type: application/json
+
+{
+  "title": "Fail case"
+}
+
+###
+
+### Update non-existing todo
+PUT http://localhost:3000/todos/9999
+Content-Type: application/json
+
+{
+  "title": "Does not exist"
+}
+
+###
