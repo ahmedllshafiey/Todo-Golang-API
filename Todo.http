@@ -1,0 +1,37 @@
+### Create a new todo (valid)
+POST http://localhost:3000/todos
+Content-Type: application/json
+
+{
+  "title": "Learn Go",
+  "completed": false
+}
+
+###
+
+### Create todo without completed (should default if handled)
+POST http://localhost:3000/todos
+Content-Type: application/json
+
+{
+  "title": "Write API"
+}
+
+###
+
+### Create todo with missing title (should fail validation)
+POST http://localhost:3000/todos
+Content-Type: application/json
+
+{
+  "completed": true
+}
+
+###
+
+### Create todo with invalid JSON
+POST http://localhost:3000/todos
+Content-Type: application/json
+
+{
+  "title": "Broken JSON",
