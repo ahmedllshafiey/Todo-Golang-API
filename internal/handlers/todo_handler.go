@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 	"todo-api/internal/repository"
@@ -21,8 +20,8 @@ type CreateTodoInput struct {
 // nil -----> set completed as -> not provided
 
 type UpdateTodoInput struct {
-	Title     string `json:"title"`
-	Completed *bool  `json:"completed"`
+	Title     *string `json:"title"`
+	Completed *bool   `json:"completed"`
 }
 
 func CreateTodoHandler(pool *pgxpool.Pool) gin.HandlerFunc {
@@ -105,19 +104,30 @@ func UpdateTodoByIDHandler(pool *pgxpool.Pool) gin.HandlerFunc {
 			return
 		}
 
-		if input.Title == "" && input.Completed == nil {
+		if input.Title == nil && input.Completed == nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "At least one field(title or completed) must be provided"})
 			return
 		}
 
 		var completed bool
-		log.Printf("%v", completed)
 
 		if input.Completed != nil {
 			completed = *input.Completed
 		}
 
-		todo, err := repository.UpdateTodo(pool, id, input.Title, *input.Completed)
+		exist, err := repository.GetTodoByID(pool, id)
+
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Todo not found"})
+		}
+
+		title := exist.Title
+
+		if input.Title != nil {
+			title = *input.Title
+		}
+
+		todo, err := repository.UpdateTodo(pool, id, title, completed)
 
 		if err != nil {
 			if err == pgx.ErrNoRows {
