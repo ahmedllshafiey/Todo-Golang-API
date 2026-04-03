@@ -3,6 +3,8 @@ GET http://localhost:3000/
 
 ###
 
+### ================= AUTH =================
+
 ### Register user (valid)
 POST http://localhost:3000/auth/register
 Content-Type: application/json
@@ -54,6 +56,60 @@ Content-Type: application/json
   "email": "broken@example.com",
 
 ###
+
+### Login user (valid)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "test4@example.com",
+  "password": "123456"
+}
+
+###
+
+### Login with wrong password (should fail)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "test4@example.com",
+  "password": "wrongpassword"
+}
+
+###
+
+### Login with non-existing user (should fail)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "nouser@example.com",
+  "password": "123456"
+}
+
+###
+
+### Login with missing fields (should fail)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "test4@example.com"
+}
+
+###
+
+### Login with invalid JSON (should fail)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "test4@example.com",
+
+###
+
+### ================= TODOS =================
 
 ### Get all todos (empty or list)
 GET http://localhost:3000/todos

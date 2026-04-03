@@ -53,5 +53,7 @@ func main() {
 
 	router.POST("/auth/register", handlers.CreateUserHandler(pool))
 
+	router.POST("/auth/login", handlers.LoginHandler(pool, cfg))
+
 	router.Run(":" + cfg.Port)
 }
