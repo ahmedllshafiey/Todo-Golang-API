@@ -92,6 +92,7 @@ func LoginHandler(pool *pgxpool.Pool, cfg *config.Config) gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "Invalid credentials",
 			})
+			return
 		}
 
 		// map[string]interface{}

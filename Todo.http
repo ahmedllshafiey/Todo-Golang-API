@@ -1,23 +1,30 @@
-### Health check
-GET http://localhost:3000/
+### ================= VARIABLES =================
+@BASE_URL = http://localhost:3000
+@TEST_EMAIL = test@example.com
+@TEST_PASSWORD = 123456
+@INVALID_PASSWORD = wrongpassword
+@NON_EXIST_EMAIL = nouser@example.com
+@TODO_ID = 1
+@NON_EXIST_TODO = 9999
 
-###
+### ================= HEALTH CHECK =================
+GET {{BASE_URL}}/
 
 ### ================= AUTH =================
 
-### Register user (valid)
-POST http://localhost:3000/auth/register
+# Register valid user
+POST {{BASE_URL}}/auth/register
 Content-Type: application/json
 
 {
-  "email": "test4@example.com",
-  "password": "123456"
+  "email": "{{TEST_EMAIL}}",
+  "password": "{{TEST_PASSWORD}}"
 }
 
 ###
 
-### Register user with short password (should fail)
-POST http://localhost:3000/auth/register
+# Register user with short password (fail)
+POST {{BASE_URL}}/auth/register
 Content-Type: application/json
 
 {
@@ -27,110 +34,86 @@ Content-Type: application/json
 
 ###
 
-### Register user with missing email (should fail)
-POST http://localhost:3000/auth/register
+# Register user with missing email (fail)
+POST {{BASE_URL}}/auth/register
 Content-Type: application/json
 
 {
-  "password": "123456"
+  "password": "{{TEST_PASSWORD}}"
 }
 
 ###
 
-### Register user with duplicate email (should fail)
-POST http://localhost:3000/auth/register
+# Register user with duplicate email (fail)
+POST {{BASE_URL}}/auth/register
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
-  "password": "123456"
+  "email": "{{TEST_EMAIL}}",
+  "password": "{{TEST_PASSWORD}}"
 }
 
 ###
 
-### Register user with invalid JSON (should fail)
-POST http://localhost:3000/auth/register
+# Login valid user
+POST {{BASE_URL}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "broken@example.com"
-  // missing closing intentionally
+  "email": "{{TEST_EMAIL}}",
+  "password": "{{TEST_PASSWORD}}"
 }
 
 ###
 
-### Login user (valid)
-POST http://localhost:3000/auth/login
+# Login with wrong password (fail)
+POST {{BASE_URL}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "test4@example.com",
-  "password": "123456"
+  "email": "{{TEST_EMAIL}}",
+  "password": "{{INVALID_PASSWORD}}"
 }
 
 ###
 
-### Login with wrong password (should fail)
-POST http://localhost:3000/auth/login
+# Login non-existing user (fail)
+POST {{BASE_URL}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "test4@example.com",
-  "password": "wrongpassword"
+  "email": "{{NON_EXIST_EMAIL}}",
+  "password": "{{TEST_PASSWORD}}"
 }
 
 ###
 
-### Login with non-existing user (should fail)
-POST http://localhost:3000/auth/login
+# Login with missing fields (fail)
+POST {{BASE_URL}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "nouser@example.com",
-  "password": "123456"
+  "email": "{{TEST_EMAIL}}"
 }
-
-###
-
-### Login with missing fields (should fail)
-POST http://localhost:3000/auth/login
-Content-Type: application/json
-
-{
-  "email": "test4@example.com"
-}
-
-###
-
-### Login with invalid JSON (should fail)
-POST http://localhost:3000/auth/login
-Content-Type: application/json
-
-{
-  "email": "test4@example.com"
-  // missing closing intentionally
-}
-
-###
 
 ### ================= PROTECTED =================
 
-### Access protected route (REPLACE TOKEN)
-GET http://localhost:3000/protected-test
+# Access protected route (replace token)
+GET {{BASE_URL}}/protected-test
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### ================= TODOS =================
+
+# Get all todos
+GET {{BASE_URL}}/todos
 Authorization: Bearer YOUR_TOKEN_HERE
 
 ###
 
-### ================= TODOS =================
-
-### Get all todos
-GET http://localhost:3000/todos
-
-###
-
-### Create a new todo (valid)
-POST http://localhost:3000/todos
+# Create todos
+POST {{BASE_URL}}/todos
 Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
 
 {
   "title": "Learn Go",
@@ -139,19 +122,21 @@ Content-Type: application/json
 
 ###
 
-### Create todo without completed
-POST http://localhost:3000/todos
+POST {{BASE_URL}}/todos
 Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
 
 {
-  "title": "Write API"
+  "title": "Write API",
+  "completed": false
 }
 
 ###
 
-### Create todo with missing title (should fail)
-POST http://localhost:3000/todos
+# Create todo with missing title (fail)
+POST {{BASE_URL}}/todos
 Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
 
 {
   "completed": true
@@ -159,35 +144,27 @@ Content-Type: application/json
 
 ###
 
-### Create todo with invalid JSON (should fail)
-POST http://localhost:3000/todos
+# Get todo by ID
+GET {{BASE_URL}}/todos/{{TODO_ID}}
+Authorization: Bearer YOUR_TOKEN_HERE
+
+###
+
+# Get todo invalid ID / non-existing
+GET {{BASE_URL}}/todos/abc
+Authorization: Bearer YOUR_TOKEN_HERE
+
+###
+
+GET {{BASE_URL}}/todos/{{NON_EXIST_TODO}}
+Authorization: Bearer YOUR_TOKEN_HERE
+
+###
+
+# Update todos
+PUT {{BASE_URL}}/todos/{{TODO_ID}}
 Content-Type: application/json
-
-{
-  "title": "Broken JSON"
-  // missing closing intentionally
-}
-
-###
-
-### Get todo by valid ID
-GET http://localhost:3000/todos/1
-
-###
-
-### Get todo with invalid ID
-GET http://localhost:3000/todos/abc
-
-###
-
-### Get todo that doesn't exist
-GET http://localhost:3000/todos/9999
-
-###
-
-### Update ONLY title
-PUT http://localhost:3000/todos/1
-Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
 
 {
   "title": "Updated Title Only"
@@ -195,9 +172,9 @@ Content-Type: application/json
 
 ###
 
-### Update ONLY completed
-PUT http://localhost:3000/todos/1
+PUT {{BASE_URL}}/todos/{{TODO_ID}}
 Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
 
 {
   "completed": true
@@ -205,9 +182,9 @@ Content-Type: application/json
 
 ###
 
-### Update BOTH fields
-PUT http://localhost:3000/todos/1
+PUT {{BASE_URL}}/todos/{{TODO_ID}}
 Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
 
 {
   "title": "Fully Updated",
@@ -216,18 +193,18 @@ Content-Type: application/json
 
 ###
 
-### Update with empty body (should fail)
-PUT http://localhost:3000/todos/1
+# Update with empty body / invalid ID / non-existing
+PUT {{BASE_URL}}/todos/{{TODO_ID}}
 Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
 
-{
-}
+{}
 
 ###
 
-### Update with invalid ID
-PUT http://localhost:3000/todos/abc
+PUT {{BASE_URL}}/todos/abc
 Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
 
 {
   "title": "Fail case"
@@ -235,9 +212,9 @@ Content-Type: application/json
 
 ###
 
-### Update non-existing todo
-PUT http://localhost:3000/todos/9999
+PUT {{BASE_URL}}/todos/{{NON_EXIST_TODO}}
 Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
 
 {
   "title": "Does not exist"
@@ -245,15 +222,16 @@ Content-Type: application/json
 
 ###
 
-### Delete todo by valid ID
-DELETE http://localhost:3000/todos/7
+# Delete todos
+DELETE {{BASE_URL}}/todos/7
+Authorization: Bearer YOUR_TOKEN_HERE
 
 ###
 
-### Delete todo with invalid ID
-DELETE http://localhost:3000/todos/abc
+DELETE {{BASE_URL}}/todos/abc
+Authorization: Bearer YOUR_TOKEN_HERE
 
 ###
 
-### Delete todo that doesn't exist
-DELETE http://localhost:3000/todos/9999
+DELETE {{BASE_URL}}/todos/{{NON_EXIST_TODO}}
+Authorization: Bearer YOUR_TOKEN_HERE
